@@ -6,17 +6,16 @@ from genealgorithms import GeneAlgorithms
 
 # нейросеть в общем
 class GeenNeuronet:
-    def __init__(self, gene : NeuronetGene):
-        self.gene = gene
     
     # проход по нейронной сети 
-    def run(self, inputs):
+    @staticmethod
+    def run(gene: NeuronetGene, inputs):
         # актуальные выходные данные на этом шагу
         passingValues = NeuroMath.sigmoidArray(inputs)
         
-        for index in range(len(self.gene.biases)):
+        for index in range(len(gene.biases)):
             passingValues = NeuroMath.sigmoidArray(
-                np.dot(self.gene.weights[index].T, passingValues) + self.gene.biases[index]
+                np.dot(gene.weights[index].T, passingValues) + gene.biases[index]
             )
         
         print(passingValues)

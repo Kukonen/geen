@@ -12,8 +12,25 @@ class GeneAlgorithms:
         return NeuronetGene(biases, weights)
     
     @staticmethod
+    def isAllGeneComplete(genes):
+        for gene in genes:
+            if gene.completed < 1:
+                return False
+        
+        return True
+    
+    # сортировка 
+    # вначале по убыванию completed
+    # после по возврастанию fitness
+    @staticmethod
+    def sortGene(genes):
+        # TODO: Test
+        return sorted(genes, key=lambda x: (-x.completed, x.fitness if x.fitness is not None else float('inf')))
+    
+    @staticmethod
     def mutate(gene : NeuronetGene):
         pass
+    # return newGene1 and newGene2 - results of gene crossover
     @staticmethod
     def crossover(gene1 : NeuronetGene, gene2: NeuronetGene):
         pass

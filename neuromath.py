@@ -7,3 +7,11 @@ class NeuroMath:
     @staticmethod
     def sigmoidArray(arr):
         return [NeuroMath.sigmoid(x) for x in arr]
+    @staticmethod
+    def MSE(output, target):
+        return ((target - output)**2).mean(axis=None)
+    
+    @staticmethod
+    def getRandomBooleanChoise(chance):
+        choices = [True, False]
+        return np.random.choice(choices, p=[chance, 1 - chance])
