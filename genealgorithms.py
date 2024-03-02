@@ -19,6 +19,19 @@ class GeneAlgorithms:
         
         return True
     
+    # сортировка 
+    # вначале по убыванию completed
+    # после по возврастанию fitness
+    @staticmethod
+    def sortGene(genes):
+        # TODO: Test
+        return sorted(genes, key=lambda x: (-x.completed, x.fitness if x.fitness is not None else float('inf')))
+    
+    @staticmethod
+    def getRandomBooleanChoise(chance):
+        choices = [True, False]
+        return np.random.choice(choices, p=[chance, 1 - chance])
+    
     @staticmethod
     def mutate(gene : NeuronetGene):
         pass

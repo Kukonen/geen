@@ -18,15 +18,21 @@ class GeenLearn:
     def learn(self, survive):
         while GeneAlgorithms.isAllGeneComplete(self.genes):
             # steping from 0 to 100% in learning data
-            for i in range(1):
-                pass
-    
+            for start in range(0, 100, int(self.distance * 100)):
+                self.step(start / 100)
+                # TODO: optimize
+                self.genes = GeneAlgorithms.sortGene(self.genes)
+                
     # start equal completed distance
     # only gene with start == completed run in step
     def step(self, start):
+        # TODO: optimise this!
         for gene in self.genes:
             if (gene.completed == start):
                 gene = self.running(gene)
+                # that's donesn't goes through 100%
+                ranDistace = start + self.distance * 100 if start + self.distance * 100 < 100 else 100
+                gene.completed += ranDistace
         
     # passing distance and adding mistake to fitness        
     def running(self, gene: NeuronetGene):
