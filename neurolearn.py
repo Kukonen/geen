@@ -3,15 +3,17 @@ from genealgorithms import GeneAlgorithms
 from neuronet import GeenNeuronet
 from neuronetgene import NeuronetGene
 from neuromath import NeuroMath
+
 class GeenLearn:
     # distance is the number of test data that the gene passes
-    def __init__(self, genes, learnX, testX, learnY, testY, distance = 0.2):
+    def __init__(self, genes, learnX, testX, learnY, testY, distance = 0.2, mutateChance = 0.05):
         self.genes = genes
         self.learnX = learnX
         self.testX = testX
         self.learnY = learnY
         self.testY = testY
         self.distance = distance
+        self.mutateChance = mutateChance
     
     # all process learning
     # survival is % best what will be survived
@@ -23,6 +25,8 @@ class GeenLearn:
                 # TODO: optimize
                 self.genes = GeneAlgorithms.sortGene(self.genes)
                 
+            self.select()
+                
     # start equal completed distance
     # only gene with start == completed run in step
     def step(self, start):
@@ -33,6 +37,35 @@ class GeenLearn:
                 # that's donesn't goes through 100%
                 ranDistace = start + self.distance * 100 if start + self.distance * 100 < 100 else 100
                 gene.completed += ranDistace
+    
+    # selection method
+    def select(self):
+        selection = []
+        
+        # TODO: maybe not all elements will be passed
+        # select genes that's went to end
+        for gene in self.genes:
+            if gene.completed == 1:
+                selection.append(gene)
+                self.genes.remove(gene)
+        
+        # untill selection doesn't empty
+        # doing crossover with all ended genes
+        while len(selection):
+            fisrtGeneIndex = 0
+            secondGeneIndex = np.random.randint(1, len(selection))
+            
+            newGene1, newGene2 = GeneAlgorithms.crossover(selection[fisrtGeneIndex], selection[secondGeneIndex])
+            
+            # mutate 
+            if (NeuroMath.getRandomBooleanChoise(self.mutateChance)):
+                newGene1 = GeneAlgorithms.mutate(newGene1)
+                
+            if (NeuroMath.getRandomBooleanChoise(self.mutateChance)):    
+                newGene2 = GeneAlgorithms.mutate(newGene2)
+            
+            self.genes.append(newGene1)
+            self.genes.append(newGene2)
         
     # passing distance and adding mistake to fitness        
     def running(self, gene: NeuronetGene):
