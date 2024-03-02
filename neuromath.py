@@ -7,3 +7,6 @@ class NeuroMath:
     @staticmethod
     def sigmoidArray(arr):
         return [NeuroMath.sigmoid(x) for x in arr]
+    @staticmethod
+    def MSE(output, target):
+        return ((target - output)**2).mean(axis=None)

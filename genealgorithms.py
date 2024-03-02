@@ -12,6 +12,14 @@ class GeneAlgorithms:
         return NeuronetGene(biases, weights)
     
     @staticmethod
+    def isAllGeneComplete(genes):
+        for gene in genes:
+            if gene.completed < 1:
+                return False
+        
+        return True
+    
+    @staticmethod
     def mutate(gene : NeuronetGene):
         pass
     @staticmethod
