@@ -83,20 +83,21 @@ class GeenLearn:
             self.genes.append(newGene1)
             self.genes.append(newGene2)
         
+    # TODO: here learn is number and it's nesting in array, but output can have many values
     # passing distance and adding mistake to fitness        
     def running(self, gene: NeuronetGene):
         # TODO: now we set 0 after each step, maybe we need set all fitness with before steps
         gene.fitness = 0
         
         for index in range(
-            int(len(self.learnX) * gene.completed), int(len(self.learnX) * (gene.completed + self.distance))
+            int(len(self.learnX) * gene.completed), int(len(self.learnX) * (gene.completed + self.distance if gene.completed + self.distance < 1 else 1))
         ):
             gene.fitness += NeuroMath.MSE(
-                GeenNeuronet.run(gene, self.learnX[index]), self.learnY[index]
+                GeenNeuronet.run(gene, self.learnX[index]), np.array(self.learnY[index])
             )
         
         # mean fitness
-        gene.fitness = gene.fitness / (int(len(self.learnX) * (gene.completed + self.distance) - len(self.learnX) * gene.completed))
+        gene.fitness = gene.fitness / (int(len(self.learnX) * (gene.completed + self.distance if gene.completed + self.distance < 1 else 1) - len(self.learnX) * gene.completed))
         
         return gene
     
@@ -106,8 +107,11 @@ class GeenLearn:
     # TODO: it's just select with the best fitness
     def getTheBestGene(self):
         for index, gene in enumerate(self.genes):
-            self.genes[index].completed = 0
-            self.genes[index] = self.running(self.genes[index])
+            # self.genes[index].completed = 0
+            # self.genes[index] = self.running(self.genes[index])
+            gene.completed = 0
+            self.genes[index] = self.running(gene)
 
-        return self.genes[0]
+        return self.genes
+        # return self.genes[0]
         # return sorted(self.genes, key=lambda x: -(x.fitness if x.fitness is not None else float('-inf')))[0]
