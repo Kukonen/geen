@@ -8,7 +8,7 @@ from crossover import Crossover
 
 class GeenLearn:
     # distance is the number of test data that the gene passes
-    def __init__(self, genes, learnX, testX, learnY, testY, distance = 0.2, mutateChance = 0.05):
+    def __init__(self, layers, genes, learnX, testX, learnY, testY, distance = 0.2, mutateChance = 0.05):
         self.genes = genes
         self.learnX = learnX
         self.testX = testX
@@ -16,6 +16,7 @@ class GeenLearn:
         self.testY = testY
         self.distance = distance
         self.mutateChance = mutateChance
+        self.layers = layers
     
     # all process learning
     # survival is % best what will be survived
@@ -57,7 +58,7 @@ class GeenLearn:
             fisrtGeneIndex = 0
             secondGeneIndex = np.random.randint(1, len(selection))
             
-            newGene1, newGene2 = Crossover.two_point_cross(selection[fisrtGeneIndex], selection[secondGeneIndex])
+            newGene1, newGene2 = Crossover.two_point_cross(selection[fisrtGeneIndex], selection[secondGeneIndex], self.layers)
             
             selection.pop(fisrtGeneIndex)
             selection.pop(secondGeneIndex)
