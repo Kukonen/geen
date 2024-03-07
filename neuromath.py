@@ -10,3 +10,8 @@ class NeuroMath:
     @staticmethod
     def MSE(output, target):
         return ((target - output)**2).mean(axis=None)
+    
+    @staticmethod
+    def getRandomBooleanChoise(chance):
+        choices = [True, False]
+        return np.random.choice(choices, p=[chance, 1 - chance])
