@@ -3,6 +3,8 @@ from genealgorithms import GeneAlgorithms
 from neuronet import GeenNeuronet
 from neuronetgene import NeuronetGene
 from neuromath import NeuroMath
+from mutator import Mutator
+from crossover import Crossover
 
 class GeenLearn:
     # distance is the number of test data that the gene passes
@@ -55,14 +57,17 @@ class GeenLearn:
             fisrtGeneIndex = 0
             secondGeneIndex = np.random.randint(1, len(selection))
             
-            newGene1, newGene2 = GeneAlgorithms.crossover(selection[fisrtGeneIndex], selection[secondGeneIndex])
+            newGene1, newGene2 = Crossover.two_point_cross(selection[fisrtGeneIndex], selection[secondGeneIndex])
+            
+            selection.pop(fisrtGeneIndex)
+            selection.pop(secondGeneIndex)
             
             # mutate 
             if (NeuroMath.getRandomBooleanChoise(self.mutateChance)):
-                newGene1 = GeneAlgorithms.mutate(newGene1)
+                newGene1 = Mutator.mutate(newGene1)
                 
             if (NeuroMath.getRandomBooleanChoise(self.mutateChance)):    
-                newGene2 = GeneAlgorithms.mutate(newGene2)
+                newGene2 = Mutator.mutate(newGene2)
             
             self.genes.append(newGene1)
             self.genes.append(newGene2)
