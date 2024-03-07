@@ -5,6 +5,7 @@ from neuronetgene import NeuronetGene
 from neuromath import NeuroMath
 from mutator import Mutator
 from crossover import Crossover
+import math
 
 class GeenLearn:
     # distance is the number of test data that the gene passes
@@ -17,10 +18,11 @@ class GeenLearn:
         self.distance = distance
         self.mutateChance = mutateChance
         self.layers = layers
+        
+        self.meanFitness = 0
     
     # all process learning
-    # survival is % best what will be survived
-    def learn(self, survive):
+    def learn(self):
         while GeneAlgorithms.isAllGeneComplete(self.genes):
             # steping from 0 to 100% in learning data
             for start in range(0, 100, int(self.distance * 100)):
@@ -28,7 +30,9 @@ class GeenLearn:
                 # TODO: optimize
                 self.genes = GeneAlgorithms.sortGene(self.genes)
                 
+            self.meanFitness = self.meanFitness / len(self.genes)
             self.select()
+            self.meanFitness = 0
                 
     # start equal completed distance
     # only gene with start == completed run in step
@@ -49,6 +53,13 @@ class GeenLearn:
         # select genes that's went to end
         for gene in self.genes:
             if gene.completed == 1:
+                selection.append(gene)
+                self.genes.remove(gene)
+        
+        # мы с некоторым шансом добавляем ген в выборку для селекции
+        # зависимость от % пройденного пути и средней приспособленности
+        for gene in self.genes:
+            if NeuroMath.getRandomBooleanChoise(0.75 * gene.completed) and NeuroMath.getRandomBooleanChoise(-0.8 * (np.fabs(self.meanFitness - gene.fitness) - 1.05)):
                 selection.append(gene)
                 self.genes.remove(gene)
         
@@ -75,11 +86,22 @@ class GeenLearn:
         
     # passing distance and adding mistake to fitness        
     def running(self, gene: NeuronetGene):
+        # TODO: now we set 0 after each step, maybe we need set all fitness with before steps
+        gene.fitness = 0
+        
         for index in range(
-            int(len(self.learnX) * gene.completed), int(len(self.learnX) * (gene.completed + self.step))
+            int(len(self.learnX) * gene.completed), int(len(self.learnX) * (gene.completed + self.distance))
         ):
             gene.fitness += NeuroMath.MSE(
                 GeenNeuronet.run(gene, self.learnX[index]), self.learnY[index]
             )
         
+        # mean fitness
+        gene.fitness = gene.fitness / (int(len(self.learnX) * (gene.completed + self.distance) - len(self.learnX) * gene.completed))
+        
+        # add gene mean fitness to all mean fitness
+        self.meanFitness += gene.fitness
         return gene
+    
+    def getGenes(self):
+        return self.genes
