@@ -22,9 +22,9 @@ class GeenNeuronet:
         
         return passingValues
     
-gene = GeneAlgorithms.genetareRandomGene([1, 3, 2, 1])
-neu = GeenNeuronet(gene)
+#gene = GeneAlgorithms.genetareRandomGene([1, 3, 2, 1])
+#neu = GeenNeuronet(gene)
 
-gene.print()
+#gene.print()
 
-GeenNeuronet(neu.run([3]))
+#GeenNeuronet(neu.run([3]))

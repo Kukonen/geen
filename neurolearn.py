@@ -37,12 +37,12 @@ class GeenLearn:
     # only gene with start == completed run in step
     def step(self, start):
         # TODO: optimise this!
-        for gene in self.genes:
+        for index, gene in enumerate(self.genes):
             if (gene.completed == start):
-                gene = self.running(gene)
+                self.genes[index] = self.running(gene)
                 # that's donesn't goes through 100%
                 ranDistace = start + self.distance * 100 if start + self.distance * 100 < 100 else 100
-                gene.completed += ranDistace
+                self.genes[index].completed += ranDistace
     
     # selection method
     def select(self):
@@ -50,10 +50,10 @@ class GeenLearn:
         
         # TODO: maybe not all elements will be passed
         # select genes that's went to end
-        for gene in self.genes:
-            if gene.completed == 1:
-                selection.append(gene)
-                self.genes.remove(gene)
+        # for gene in self.genes:
+        #     if gene.completed == 1:
+        #         selection.append(gene)
+        #         self.genes.remove(gene)
         
         # мы с некоторым шансом добавляем ген в выборку для селекции
         # зависимость от % пройденного пути и средней приспособленности
@@ -64,7 +64,7 @@ class GeenLearn:
         
         # untill selection doesn't empty
         # doing crossover with all ended genes
-        while len(selection):
+        while len(selection) > 1:
             fisrtGeneIndex = 0
             secondGeneIndex = np.random.randint(1, len(selection))
             
@@ -105,4 +105,9 @@ class GeenLearn:
     
     # TODO: it's just select with the best fitness
     def getTheBestGene(self):
-        return self.genes.sort(key=lambda x: x.fitness)[0]
+        for index, gene in enumerate(self.genes):
+            self.genes[index].completed = 0
+            self.genes[index] = self.running(self.genes[index])
+
+        return self.genes[0]
+        # return sorted(self.genes, key=lambda x: -(x.fitness if x.fitness is not None else float('-inf')))[0]
