@@ -13,5 +13,8 @@ class NeuroMath:
     
     @staticmethod
     def getRandomBooleanChoise(chance):
+        if chance >= 1:
+            return True
+        
         choices = [True, False]
         return np.random.choice(choices, p=[chance, 1 - chance])

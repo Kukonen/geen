@@ -18,11 +18,14 @@ class GeenLearn:
         self.distance = distance
         self.mutateChance = mutateChance
         self.layers = layers
+        
+        self.meanFitneses = []
     
     # all process learning
     # steps is the number of max steps
     def learn(self, steps = 1000):
-        while GeneAlgorithms.isAllGeneComplete(self.genes) and steps:
+        while not(GeneAlgorithms.isAllGeneComplete(self.genes)) and steps:
+            print("steps have " + str(steps))
             # steping from 0 to 100% in learning data
             for start in range(0, 100, int(self.distance * 100)):
                 self.step(start / 100)
@@ -64,14 +67,16 @@ class GeenLearn:
         
         # untill selection doesn't empty
         # doing crossover with all ended genes
+        print("selection start")
         while len(selection) > 1:
+            
             fisrtGeneIndex = 0
             secondGeneIndex = np.random.randint(1, len(selection))
             
             newGene1, newGene2 = Crossover.two_point_cross(selection[fisrtGeneIndex], selection[secondGeneIndex], self.layers)
             
-            selection.pop(fisrtGeneIndex)
             selection.pop(secondGeneIndex)
+            selection.pop(fisrtGeneIndex)
             
             # mutate 
             if (NeuroMath.getRandomBooleanChoise(self.mutateChance)):
@@ -82,6 +87,8 @@ class GeenLearn:
             
             self.genes.append(newGene1)
             self.genes.append(newGene2)
+        
+        print("selection end")
         
     # TODO: here learn is number and it's nesting in array, but output can have many values
     # passing distance and adding mistake to fitness        
@@ -112,6 +119,6 @@ class GeenLearn:
             gene.completed = 0
             self.genes[index] = self.running(gene)
 
-        return self.genes
+        # return self.genes
         # return self.genes[0]
-        # return sorted(self.genes, key=lambda x: -(x.fitness if x.fitness is not None else float('-inf')))[0]
+        return sorted(self.genes, key=lambda x: -(x.fitness if x.fitness is not None else float('-inf')))
