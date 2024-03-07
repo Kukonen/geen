@@ -18,21 +18,20 @@ class GeenLearn:
         self.distance = distance
         self.mutateChance = mutateChance
         self.layers = layers
-        
-        self.meanFitness = 0
     
     # all process learning
-    def learn(self):
-        while GeneAlgorithms.isAllGeneComplete(self.genes):
+    # steps is the number of max steps
+    def learn(self, steps = 1000):
+        while GeneAlgorithms.isAllGeneComplete(self.genes) and steps:
             # steping from 0 to 100% in learning data
             for start in range(0, 100, int(self.distance * 100)):
                 self.step(start / 100)
                 # TODO: optimize
                 self.genes = GeneAlgorithms.sortGene(self.genes)
                 
-            self.meanFitness = self.meanFitness / len(self.genes)
             self.select()
-            self.meanFitness = 0
+            
+            steps -= 1
                 
     # start equal completed distance
     # only gene with start == completed run in step
@@ -59,7 +58,7 @@ class GeenLearn:
         # мы с некоторым шансом добавляем ген в выборку для селекции
         # зависимость от % пройденного пути и средней приспособленности
         for gene in self.genes:
-            if NeuroMath.getRandomBooleanChoise(0.75 * gene.completed) and NeuroMath.getRandomBooleanChoise(-0.8 * (np.fabs(self.meanFitness - gene.fitness) - 1.05)):
+            if NeuroMath.getRandomBooleanChoise(0.75 * gene.completed) and NeuroMath.getRandomBooleanChoise(-0.8 * (gene.fitness - 1.05)):
                 selection.append(gene)
                 self.genes.remove(gene)
         
@@ -99,9 +98,11 @@ class GeenLearn:
         # mean fitness
         gene.fitness = gene.fitness / (int(len(self.learnX) * (gene.completed + self.distance) - len(self.learnX) * gene.completed))
         
-        # add gene mean fitness to all mean fitness
-        self.meanFitness += gene.fitness
         return gene
     
     def getGenes(self):
         return self.genes
+    
+    # TODO: it's just select with the best fitness
+    def getTheBestGene(self):
+        return self.genes.sort(key=lambda x: x.fitness)[0]
