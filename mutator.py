@@ -1,5 +1,5 @@
 import random
-from geen.neuronetgene import NeuronetGene
+from neuronetgene import NeuronetGene
 
 
 class Mutator:
