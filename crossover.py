@@ -18,7 +18,7 @@ class Crossover:
         counter = 0
         final_baises_f, final_baises_s = [], []
 
-        for i in range(1, len(layers) - 1):
+        for i in range(1, len(layers)):
             temp_array_f, temp_array_s = [], []
             for j in range(0, layers[i]):
                 temp_array_f.append(biases_f[counter])
