@@ -5,7 +5,7 @@ from neuronetgene import NeuronetGene
 from neuromath import NeuroMath
 from mutator import Mutator
 from crossover import Crossover
-import math
+import matplotlib.pyplot as plt
 
 class GeenLearn:
     # distance is the number of test data that the gene passes
@@ -24,6 +24,10 @@ class GeenLearn:
     # all process learning
     # steps is the number of max steps
     def learn(self, steps = 1000):
+        plt.figure()
+        axis_x = []
+        counter = 1
+        
         # while not(GeneAlgorithms.isAllGeneComplete(self.genes)) and steps:
         while steps:
             print("steps have " + str(steps))
@@ -33,9 +37,24 @@ class GeenLearn:
                 # TODO: optimize
                 self.genes = GeneAlgorithms.sortGene(self.genes)
                 
+            self.meanFitneses.append(sum(gen.fitness for gen in self.genes) / len(self.genes))
+            axis_x.append(counter)
+            
             self.select()
             
+            plt.clf()
+            plt.plot(axis_x, self.meanFitneses, marker='o')  # Строим график с точками
+
+            plt.title("График приспосабливаемости")
+            plt.xlabel('Поколения')
+            plt.ylabel('Общая приспосабливаемость')
+
+            plt.pause(0.5)
+
             steps -= 1
+            counter += 1
+        
+        plt.show()
                 
     # start equal completed distance
     # only gene with start == completed run in step
@@ -69,7 +88,7 @@ class GeenLearn:
         
         # untill selection doesn't empty
         # doing crossover with all ended genes
-        print("selection start with " + str(len(selection)) + " genes and " + str(len(self.genes)) + " genes")
+        print("selection start with " + str(len(selection)))
         while len(selection) > 1:
             
             fisrtGeneIndex = 0
@@ -77,23 +96,26 @@ class GeenLearn:
             
             newGene1, newGene2 = Crossover.two_point_cross(selection[fisrtGeneIndex], selection[secondGeneIndex], self.layers)
             
-            selection.pop(secondGeneIndex)
-            selection.pop(fisrtGeneIndex)
             
             # mutate 
-            if (NeuroMath.getRandomBooleanChoise(self.mutateChance)):
-                newGene1 = Mutator.mutate(newGene1)
+            # if (NeuroMath.getRandomBooleanChoise(self.mutateChance)):
+            #     newGene1 = Mutator.mutate(newGene1)
                 
-            if (NeuroMath.getRandomBooleanChoise(self.mutateChance)):    
-                newGene2 = Mutator.mutate(newGene2)
+            # if (NeuroMath.getRandomBooleanChoise(self.mutateChance)):    
+            #     newGene2 = Mutator.mutate(newGene2)
+                
+            newGene1 = Mutator.mutate(newGene1)
+            newGene2 = Mutator.mutate(newGene2)
             
             self.genes.append(newGene1)
             self.genes.append(newGene2)
-        
+            
+            selection.pop(secondGeneIndex)
+            selection.pop(fisrtGeneIndex)
         if len(selection):
             self.genes.append(selection[0])
         
-        print("selection end with " + str(len(self.genes)) + " genes")
+        print("selection end")
         
     # TODO: here learn is number and it's nesting in array, but output can have many values
     # passing distance and adding mistake to fitness        

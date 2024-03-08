@@ -13,12 +13,13 @@ for i in range(150):
 learn_data, test_data = DataSet.get_data("student-mat.xlsx")
 
 learn = GeenLearn(layers, genes, learn_data[0], test_data[0], learn_data[1], test_data[1])
-learn.learn(2000)
+learn.learn(10)
 print(len(learn.genes))
-bestGene = learn.getTheBestGene()[0]
-worstGene = learn.getTheBestGene()[len(learn.genes) - 1]
+genes = learn.getTheBestGene()
+bestGene = genes[0]
+worstGene = genes[-1]
 print(bestGene.fitness, worstGene.fitness)
-print(GeenNeuronet.run(bestGene, test_data[0][0]))
-print(GeenNeuronet.run(worstGene, test_data[0][0]))
-print(test_data[1][0])
-# print(learn.getTheBestGene()[len(learn.genes) - 1].fitness)
+for i in range(int(len(test_data[1]) * 0.2)):
+    print("best: ", GeenNeuronet.run(bestGene, test_data[0][i]))
+    print("worst: ",GeenNeuronet.run(worstGene, test_data[0][i]))
+    print("test: ",test_data[1][i])
