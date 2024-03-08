@@ -16,7 +16,7 @@ for i in range(150):
 
 X_train, X_test, y_train, y_test = DataSet.getRandomClassificationData()
 
-learn = GeenLearn(layers, genes, X_train, X_test, y_train, y_test, distance=0.1)
+learn = GeenLearn(layers, genes, X_train, X_test, y_train, y_test, distance=0.015)
 learn.learn(500)
 print(len(learn.genes))
 genes = learn.getTheBestGene()

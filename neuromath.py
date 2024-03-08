@@ -16,5 +16,8 @@ class NeuroMath:
         if chance >= 1:
             return True
         
+        if chance < 0:
+            return False
+        
         choices = [True, False]
         return np.random.choice(choices, p=[chance, 1 - chance])

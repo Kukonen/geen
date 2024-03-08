@@ -40,7 +40,7 @@ class GeenLearn:
             self.meanFitneses.append(sum(gen.fitness for gen in self.genes) / len(self.genes))
             axis_x.append(counter)
             
-            self.select(10)
+            self.select(50)
             
             plt.clf()
             plt.plot(axis_x, self.meanFitneses, marker='o')  # Строим график с точками
@@ -68,12 +68,21 @@ class GeenLearn:
                 self.genes[index].completed += ranDistace
     
     # selection method
-    def select(self, elitism_rate = 5):
+    def select(self, elitismRate = 5):
         selection = []
 
-        elitism_genes = self.genes[:elitism_rate]
+        #sort genes by fitness
+        self.genes.sort(key=lambda x: (x.fitness if x.fitness is not None else float('inf')))
+
+        elitism_genes = self.genes[:elitismRate]
+        print("ele1 ", elitism_genes[0].fitness)
+        print("ele2 ", elitism_genes[1].fitness)
         selection.extend(elitism_genes)
-        del self.genes[:elitism_rate]
+        del self.genes[:elitismRate]
+        
+        maxFiltness = self.genes[-1].fitness
+        print("selec ln ", len(selection))
+        print("MAX: ", maxFiltness)
 
         # TODO: maybe not all elements will be passed
         # select genes that's went to end
@@ -86,7 +95,9 @@ class GeenLearn:
         # зависимость от % пройденного пути и средней приспособленности
         for gene in self.genes:
             # if NeuroMath.getRandomBooleanChoise(0.75 * gene.completed) and NeuroMath.getRandomBooleanChoise(-0.8 * (gene.fitness - 1.05)):
-            if NeuroMath.getRandomBooleanChoise(0.35 * gene.completed + (-0.65 * (gene.fitness - 1.05))):
+            if NeuroMath.getRandomBooleanChoise(0.15 * gene.completed + (-0.45 * (gene.fitness / maxFiltness - 1.05))):
+                # print(0.15 * gene.completed + (-0.45 * (gene.fitness / maxFiltness - 1.05)))
+            # if NeuroMath.getRandomBooleanChoise(0.35 * gene.completed) and NeuroMath.getRandomBooleanChoise(-0.65 * (gene.fitness - 1.05)):
                 selection.append(gene)
                 self.genes.remove(gene)
         
@@ -101,12 +112,6 @@ class GeenLearn:
             newGene1, newGene2 = Crossover.two_point_cross(selection[fisrtGeneIndex], selection[secondGeneIndex], self.layers)
 
             # mutate 
-            # if (NeuroMath.getRandomBooleanChoise(self.mutateChance)):
-            #     newGene1 = Mutator.mutate(newGene1)
-                
-            # if (NeuroMath.getRandomBooleanChoise(self.mutateChance)):    
-            #     newGene2 = Mutator.mutate(newGene2)
-                
             newGene1 = Mutator.mutate(newGene1)
             newGene2 = Mutator.mutate(newGene2)
             

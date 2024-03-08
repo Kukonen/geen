@@ -36,8 +36,8 @@ class DataSet:
         y_train = np.array(y_train)
         y_test = np.array(y_test)
 
-        y_train = np.where(y_train == 0, -1, 1)
-        y_test = np.where(y_test == 0, -1, 1)
+        # y_train = np.where(y_train == 0, -1, 1)
+        # y_test = np.where(y_test == 0, -1, 1)
 
         # Шаг 4: Создание модели и обучение ее на обучающих данных
         model = LogisticRegression()
