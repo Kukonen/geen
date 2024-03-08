@@ -8,7 +8,18 @@ class GeneAlgorithms:
     @staticmethod
     def genetareRandomGene(layers):
         biases = [np.random.rand(y) for y in layers[1:]]
+
+        for i in range(len(biases)):
+            for j in range(len(biases[i])):
+                biases[i][j] = biases[i][j] * 2 - 1
+
         weights = [np.random.rand(x, y) for x, y in zip(layers[:-1], layers[1:])]
+
+        for i in range(len(weights)):
+            for j in range(len(weights[i])):
+                for k in range(len(weights[i][j])):
+                    weights[i][j][k] = weights[i][j][k] * 2 - 1
+
         return NeuronetGene(biases, weights)
     
     @staticmethod

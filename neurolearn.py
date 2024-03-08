@@ -1,3 +1,5 @@
+import random
+
 import numpy as np
 from genealgorithms import GeneAlgorithms
 from neuronet import GeenNeuronet
@@ -40,7 +42,7 @@ class GeenLearn:
             self.meanFitneses.append(sum(gen.fitness for gen in self.genes) / len(self.genes))
             axis_x.append(counter)
             
-            self.select(50)
+            self.select(10)
             
             plt.clf()
             plt.plot(axis_x, self.meanFitneses, marker='o')  # Строим график с точками
@@ -138,10 +140,10 @@ class GeenLearn:
             gene.fitness += NeuroMath.MSE(
                 GeenNeuronet.run(gene, self.learnX[index]), np.array(self.learnY[index])
             )
-        
+
         # mean fitness
         gene.fitness = gene.fitness / (int(len(self.learnX) * (gene.completed + self.distance if gene.completed + self.distance < 1 else 1) - len(self.learnX) * gene.completed))
-        
+
         return gene
     
     def getGenes(self):
