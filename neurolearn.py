@@ -24,7 +24,8 @@ class GeenLearn:
     # all process learning
     # steps is the number of max steps
     def learn(self, steps = 1000):
-        while not(GeneAlgorithms.isAllGeneComplete(self.genes)) and steps:
+        # while not(GeneAlgorithms.isAllGeneComplete(self.genes)) and steps:
+        while steps:
             print("steps have " + str(steps))
             # steping from 0 to 100% in learning data
             for start in range(0, 100, int(self.distance * 100)):
@@ -61,13 +62,14 @@ class GeenLearn:
         # мы с некоторым шансом добавляем ген в выборку для селекции
         # зависимость от % пройденного пути и средней приспособленности
         for gene in self.genes:
-            if NeuroMath.getRandomBooleanChoise(0.75 * gene.completed) and NeuroMath.getRandomBooleanChoise(-0.8 * (gene.fitness - 1.05)):
+            # if NeuroMath.getRandomBooleanChoise(0.75 * gene.completed) and NeuroMath.getRandomBooleanChoise(-0.8 * (gene.fitness - 1.05)):
+            if NeuroMath.getRandomBooleanChoise(0.85 * gene.completed) and NeuroMath.getRandomBooleanChoise(-0.9 * (gene.fitness - 1.05)):
                 selection.append(gene)
                 self.genes.remove(gene)
         
         # untill selection doesn't empty
         # doing crossover with all ended genes
-        print("selection start")
+        print("selection start with " + str(len(selection)) + " genes and " + str(len(self.genes)) + " genes")
         while len(selection) > 1:
             
             fisrtGeneIndex = 0
@@ -88,7 +90,10 @@ class GeenLearn:
             self.genes.append(newGene1)
             self.genes.append(newGene2)
         
-        print("selection end")
+        if len(selection):
+            self.genes.append(selection[0])
+        
+        print("selection end with " + str(len(self.genes)) + " genes")
         
     # TODO: here learn is number and it's nesting in array, but output can have many values
     # passing distance and adding mistake to fitness        

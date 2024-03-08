@@ -17,7 +17,7 @@ class GeenNeuronet:
             passingValues = NeuroMath.sigmoidArray(
                 np.dot(np.array(gene.weights[index]).T, passingValues) + gene.biases[index]
             )
-        
+         
         return passingValues
     
 #gene = GeneAlgorithms.genetareRandomGene([1, 3, 2, 1])
