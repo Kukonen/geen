@@ -7,10 +7,10 @@ class Crossover:
     ##Я реализовал двухточечное скрещивание
     @staticmethod
     def two_point_cross(individual1: NeuronetGene, individual2: NeuronetGene, layers):
-        weights_f = np.reshape(individual1.weights, -1)
-        weights_s = np.reshape(individual2.weights, -1)
-        biases_f = np.reshape(individual1.biases, -1)
-        biases_s = np.reshape(individual2.biases, -1)
+        weights_f = np.array([item for sublist in [subsublist for sublist in individual1.weights for subsublist in sublist] for item in sublist])
+        weights_s = np.array([item for sublist in [subsublist for sublist in individual2.weights for subsublist in sublist] for item in sublist])
+        biases_f = np.array([item for sublist in individual1.biases for item in sublist])
+        biases_s = np.array([item for sublist in individual2.biases for item in sublist])
 
         weights_f, weights_s = Crossover.transform(weights_f, weights_s)
         biases_f, biases_s = Crossover.transform(biases_f, biases_s)
@@ -18,7 +18,7 @@ class Crossover:
         counter = 0
         final_baises_f, final_baises_s = [], []
 
-        for i in range(1, len(layers) - 1):
+        for i in range(1, len(layers)):
             temp_array_f, temp_array_s = [], []
             for j in range(0, layers[i]):
                 temp_array_f.append(biases_f[counter])

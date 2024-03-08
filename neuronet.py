@@ -15,16 +15,14 @@ class GeenNeuronet:
         
         for index in range(len(gene.biases)):
             passingValues = NeuroMath.sigmoidArray(
-                np.dot(gene.weights[index].T, passingValues) + gene.biases[index]
+                np.dot(np.array(gene.weights[index]).T, passingValues) + gene.biases[index]
             )
-        
-        print(passingValues)
-        
+         
         return passingValues
     
-gene = GeneAlgorithms.genetareRandomGene([1, 3, 2, 1])
-neu = GeenNeuronet(gene)
+#gene = GeneAlgorithms.genetareRandomGene([1, 3, 2, 1])
+#neu = GeenNeuronet(gene)
 
-gene.print()
+#gene.print()
 
-GeenNeuronet(neu.run([3]))
+#GeenNeuronet(neu.run([3]))
