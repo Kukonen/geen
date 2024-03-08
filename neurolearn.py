@@ -40,7 +40,7 @@ class GeenLearn:
             self.meanFitneses.append(sum(gen.fitness for gen in self.genes) / len(self.genes))
             axis_x.append(counter)
             
-            self.select()
+            self.select(10)
             
             plt.clf()
             plt.plot(axis_x, self.meanFitneses, marker='o')  # Строим график с точками
@@ -68,9 +68,13 @@ class GeenLearn:
                 self.genes[index].completed += ranDistace
     
     # selection method
-    def select(self):
+    def select(self, elitism_rate = 5):
         selection = []
-        
+
+        elitism_genes = self.genes[:elitism_rate]
+        selection.extend(elitism_genes)
+        del self.genes[:elitism_rate]
+
         # TODO: maybe not all elements will be passed
         # select genes that's went to end
         # for gene in self.genes:
@@ -82,7 +86,7 @@ class GeenLearn:
         # зависимость от % пройденного пути и средней приспособленности
         for gene in self.genes:
             # if NeuroMath.getRandomBooleanChoise(0.75 * gene.completed) and NeuroMath.getRandomBooleanChoise(-0.8 * (gene.fitness - 1.05)):
-            if NeuroMath.getRandomBooleanChoise(0.85 * gene.completed) and NeuroMath.getRandomBooleanChoise(-0.9 * (gene.fitness - 1.05)):
+            if NeuroMath.getRandomBooleanChoise(0.35 * gene.completed + (-0.65 * (gene.fitness - 1.05))):
                 selection.append(gene)
                 self.genes.remove(gene)
         
@@ -95,8 +99,7 @@ class GeenLearn:
             secondGeneIndex = np.random.randint(1, len(selection))
             
             newGene1, newGene2 = Crossover.two_point_cross(selection[fisrtGeneIndex], selection[secondGeneIndex], self.layers)
-            
-            
+
             # mutate 
             # if (NeuroMath.getRandomBooleanChoise(self.mutateChance)):
             #     newGene1 = Mutator.mutate(newGene1)
@@ -112,6 +115,7 @@ class GeenLearn:
             
             selection.pop(secondGeneIndex)
             selection.pop(fisrtGeneIndex)
+
         if len(selection):
             self.genes.append(selection[0])
         
