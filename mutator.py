@@ -1,10 +1,11 @@
 import random
 from neuronetgene import NeuronetGene
+from neuromath import NeuroMath
 
 
 class Mutator:
     @staticmethod
-    def mutate(individual: NeuronetGene, mean=0, std_deviation=1, mutation_rate=0.1):
+    def mutate(individual: NeuronetGene, mean=0, std_deviation=1, mutation_rate=0.2):
         mutated_biases = Mutator.mutateBiases(individual.biases, mean, std_deviation, mutation_rate)
         mutated_weights = Mutator.mutateWeights(individual.weights, mean, std_deviation, mutation_rate)
 
@@ -17,7 +18,7 @@ class Mutator:
         for layer in biases:
             mutated_layer = []
             for biase in layer:
-                if random.random() < mutation_rate:
+                if NeuroMath.getRandomBooleanChoise(mutation_rate):
                     biase = biase + random.gauss(mean, std_deviation)
                     mutated_layer.append(biase)
                 else:
@@ -36,7 +37,7 @@ class Mutator:
             for neuron_link in layer:
                 mutated_neuron_link = []
                 for weight in neuron_link:
-                    if random.random() < mutation_rate:
+                    if NeuroMath.getRandomBooleanChoise(mutation_rate):
                         weight = weight + random.gauss(mean, std_deviation)
                         mutated_neuron_link.append(weight)
                     else:
