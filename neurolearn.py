@@ -106,12 +106,13 @@ class GeenLearn:
         # untill selection doesn't empty
         # doing crossover with all ended genes
         print("selection start with " + str(len(selection)))
+
         while len(selection) > 1:
             
             fisrtGeneIndex = 0
             secondGeneIndex = np.random.randint(1, len(selection))
             
-            newGene1, newGene2 = Crossover.two_point_cross(selection[fisrtGeneIndex], selection[secondGeneIndex], self.layers)
+            newGene1, newGene2 = Crossover.two_point_cross(selection[fisrtGeneIndex], selection[secondGeneIndex], self.layers, True if elitismRate > 0 else False)
 
             # mutate 
             newGene1 = Mutator.mutate(newGene1)
@@ -122,6 +123,8 @@ class GeenLearn:
             
             selection.pop(secondGeneIndex)
             selection.pop(fisrtGeneIndex)
+
+            elitismRate -= 1
 
         if len(selection):
             self.genes.append(selection[0])

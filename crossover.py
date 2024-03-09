@@ -5,15 +5,33 @@ import numpy as np
 
 class Crossover:
     ##Я реализовал двухточечное скрещивание
+    # @staticmethod
+    # def two_point_cross(individual1: NeuronetGene, individual2: NeuronetGene, layers, with_elitisim = False):
+    #     if with_elitisim:
+    #         pass
+    #     else:
+    #         return Crossover.two_point_cross_two_genes(individual1, individual2, layers)
+
+    # If var with_elitisim is True method will change only one gene that is not elit, in other case
+    # method will change both genes
+    # For stupid: first parameter is potentially elite, second is never
     @staticmethod
-    def two_point_cross(individual1: NeuronetGene, individual2: NeuronetGene, layers):
-        weights_f = np.array([item for sublist in [subsublist for sublist in individual1.weights for subsublist in sublist] for item in sublist])
-        weights_s = np.array([item for sublist in [subsublist for sublist in individual2.weights for subsublist in sublist] for item in sublist])
+    def two_point_cross(individual1: NeuronetGene, individual2: NeuronetGene, layers, with_elitisim = False):
+        weights_f = np.array(
+            [item for sublist in [subsublist for sublist in individual1.weights for subsublist in sublist] for item in
+             sublist])
+        weights_s = np.array(
+            [item for sublist in [subsublist for sublist in individual2.weights for subsublist in sublist] for item in
+             sublist])
         biases_f = np.array([item for sublist in individual1.biases for item in sublist])
         biases_s = np.array([item for sublist in individual2.biases for item in sublist])
 
-        weights_f, weights_s = Crossover.transform(weights_f, weights_s)
-        biases_f, biases_s = Crossover.transform(biases_f, biases_s)
+        if with_elitisim:
+            weights_s = Crossover.transform_elitism(weights_f, weights_s)
+            biases_s = Crossover.transform_elitism(biases_f, biases_s)
+        else:
+            weights_f, weights_s = Crossover.transform(weights_f, weights_s)
+            biases_f, biases_s = Crossover.transform(biases_f, biases_s)
 
         counter = 0
         final_baises_f, final_baises_s = [], []
@@ -48,7 +66,6 @@ class Crossover:
 
         return NeuronetGene(final_baises_f, final_weights_f), NeuronetGene(final_baises_s, final_weights_s)
 
-
     @staticmethod
     def transform(arr1, arr2):
         length = len(arr1)
@@ -63,3 +80,18 @@ class Crossover:
             arr1[i], arr2[i] = arr2[i], arr1[i]
 
         return arr1, arr2
+
+    @staticmethod
+    def transform_elitism(elit_arr, arr):
+        length = len(elit_arr)
+
+        bound1 = random.randint(0, length)
+        bound2 = random.randint(0, length)
+
+        if bound1 < bound2:
+            bound1, bound2 = bound2, bound1
+
+        for i in range(bound1, bound2):
+            arr[i] = elit_arr[i]
+
+        return arr

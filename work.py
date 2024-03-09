@@ -4,7 +4,7 @@ from neurolearn import GeenLearn
 from genealgorithms import GeneAlgorithms
 from neuronet import GeenNeuronet
 
-layers = [10, 15, 10, 10, 5, 1]
+layers = [10, 8, 5, 1]
 genes = []
 
 for i in range(150):
@@ -16,7 +16,7 @@ for i in range(150):
 
 X_train, X_test, y_train, y_test = DataSet.getRandomClassificationData()
 
-learn = GeenLearn(layers, genes, X_train, X_test, y_train, y_test, distance=0.015)
+learn = GeenLearn(layers, genes, X_train, X_test, y_train, y_test, distance=0.02)
 learn.learn(500)
 print(len(learn.genes))
 genes = learn.getTheBestGene()
