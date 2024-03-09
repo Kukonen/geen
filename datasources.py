@@ -25,10 +25,10 @@ class DataSet:
     def getRandomClassificationData():
         # Шаг 1: Загрузка и подготовка данных
         # В этом примере мы будем использовать синтетические данные с помощью функции make_classification из sklearn.datasets
-        X, y = make_classification(n_samples=10000, n_features=10, n_classes=2, random_state=42)
+        X, y = make_classification(n_samples=10000, n_features=10, n_classes=2)
 
         # Шаг 2: Разделение данных на обучающий и тестовый наборы
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
 
         # Шаг 3: Преобразование данных в массивы numpy (если они еще не являются таковыми)
         X_train = np.array(X_train)
